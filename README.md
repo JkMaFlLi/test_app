@@ -89,9 +89,6 @@ The app uses the Flipper Zero logging system to log messages at various log leve
 
 Compile and upload the application to your Flipper Zero device. Navigate through the menu and interact with the popups to see how the application works.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
 
