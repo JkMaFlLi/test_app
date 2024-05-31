@@ -81,9 +81,6 @@ There are two popups:
 
 - `test_app_app`: The main function that sets up the app, runs the main loop, and cleans up on exit.
 
-## Logging
-
-The app uses the Flipper Zero logging system to log messages at various log levels. In the development environment, the log level is set to `Trace`, and in other environments, it is set to `Info`.
 
 ## Usage
 
