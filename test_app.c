@@ -16,6 +16,8 @@ typedef enum {
     TestAppScene_MainMenu,
     TestAppScene_FirstPopup,
     TestAppScene_SecondPopup,
+    TestAppScene_ThirdPopup,
+    TestAppScene_FourthPopup,
     TestAppScene_count
 } TestAppScene;
 
@@ -31,12 +33,22 @@ typedef struct {
 } TestApp;
 
 /** all custom events */
-typedef enum { TestAppEvent_ShowPopupOne, TestAppEvent_ShowPopupTwo } TestAppEvent;
+typedef enum {
+    TestAppEvent_ShowPopupOne,
+    TestAppEvent_ShowPopupTwo,
+    TestAppEvent_ShowPopupThree,
+    TestAppEvent_ShowPopupFour
+} TestAppEvent;
 
 /* main menu scene */
 
 /** indices for menu items */
-typedef enum { TestAppMenuSelection_One, TestAppMenuSelection_Two } TestAppMenuSelection;
+typedef enum {
+    TestAppMenuSelection_One,
+    TestAppMenuSelection_Two,
+    TestAppMenuSelection_Three,
+    TestAppMenuSelection_Four
+} TestAppMenuSelection;
 
 /** main menu callback - sends a custom event to the scene manager based on the menu selection */
 void test_app_menu_callback_main_menu(void* context, uint32_t index) {
@@ -48,6 +60,12 @@ void test_app_menu_callback_main_menu(void* context, uint32_t index) {
         break;
     case TestAppMenuSelection_Two:
         scene_manager_handle_custom_event(app->scene_manager, TestAppEvent_ShowPopupTwo);
+        break;
+    case TestAppMenuSelection_Three:
+        scene_manager_handle_custom_event(app->scene_manager, TestAppEvent_ShowPopupThree);
+        break;
+    case TestAppMenuSelection_Four:
+        scene_manager_handle_custom_event(app->scene_manager, TestAppEvent_ShowPopupFour);
         break;
     }
 }
@@ -76,6 +94,20 @@ void test_app_scene_on_enter_main_menu(void* context) {
         TestAppMenuSelection_Two,
         test_app_menu_callback_main_menu,
         app);
+    menu_add_item(
+        app->menu,
+        "3rd Submenu",
+        NULL,
+        TestAppMenuSelection_Three,
+        test_app_menu_callback_main_menu,
+        app);
+    menu_add_item(
+        app->menu,
+        "4th Submenu",
+        NULL,
+        TestAppMenuSelection_Four,
+        test_app_menu_callback_main_menu,
+        app);
     view_dispatcher_switch_to_view(app->view_dispatcher, TestAppView_Menu);
 }
 
@@ -93,6 +125,14 @@ bool test_app_scene_on_event_main_menu(void* context, SceneManagerEvent event) {
             break;
         case TestAppEvent_ShowPopupTwo:
             scene_manager_next_scene(app->scene_manager, TestAppScene_SecondPopup);
+            consumed = true;
+            break;
+        case TestAppEvent_ShowPopupThree:
+            scene_manager_next_scene(app->scene_manager, TestAppScene_ThirdPopup);
+            consumed = true;
+            break;
+        case TestAppEvent_ShowPopupFour:
+            scene_manager_next_scene(app->scene_manager, TestAppScene_FourthPopup);
             consumed = true;
             break;
         }
@@ -162,23 +202,81 @@ void test_app_scene_on_exit_popup_two(void* context) {
     popup_reset(app->popup);
 }
 
+/* popup 3 scene */
+
+void test_app_scene_on_enter_popup_three(void* context) {
+    FURI_LOG_T(TAG, "test_app_scene_on_enter_popup_three");
+    TestApp* app = context;
+    popup_reset(app->popup);
+    popup_set_context(app->popup, app);
+    popup_set_text(app->popup, "I am", 72, 10, AlignCenter, AlignTop);
+    popup_set_icon(app->popup, 10, 10, &I_cvc_36x36);
+    popup_set_header(app->popup, "GROOT...three", 64, 20, AlignLeft, AlignTop);
+    view_dispatcher_switch_to_view(app->view_dispatcher, TestAppView_Popup);
+}
+
+bool test_app_scene_on_event_popup_three(void* context, SceneManagerEvent event) {
+    FURI_LOG_T(TAG, "test_app_scene_on_event_popup_three");
+    UNUSED(context);
+    UNUSED(event);
+    return false; // don't handle any events
+}
+
+void test_app_scene_on_exit_popup_three(void* context) {
+    FURI_LOG_T(TAG, "test_app_scene_on_exit_popup_three");
+    TestApp* app = context;
+    popup_reset(app->popup);
+}
+
+/* popup 4 scene */
+
+void test_app_scene_on_enter_popup_four(void* context) {
+    FURI_LOG_T(TAG, "test_app_scene_on_enter_popup_four");
+    TestApp* app = context;
+    popup_reset(app->popup);
+    popup_set_context(app->popup, app);
+    popup_set_text(app->popup, "I am", 72, 10, AlignCenter, AlignTop);
+    popup_set_icon(app->popup, 10, 10, &I_cvc_36x36);
+    popup_set_header(app->popup, "GROOT...four", 64, 20, AlignLeft, AlignTop);
+    view_dispatcher_switch_to_view(app->view_dispatcher, TestAppView_Popup);
+}
+
+bool test_app_scene_on_event_popup_four(void* context, SceneManagerEvent event) {
+    FURI_LOG_T(TAG, "test_app_scene_on_event_popup_four");
+    UNUSED(context);
+    UNUSED(event);
+    return false; // don't handle any events
+}
+
+void test_app_scene_on_exit_popup_four(void* context) {
+    FURI_LOG_T(TAG, "test_app_scene_on_exit_popup_four");
+    TestApp* app = context;
+    popup_reset(app->popup);
+}
+
 /** collection of all scene on_enter handlers - in the same order as their enum */
 void (*const test_app_scene_on_enter_handlers[])(void*) = {
     test_app_scene_on_enter_main_menu,
     test_app_scene_on_enter_popup_one,
-    test_app_scene_on_enter_popup_two};
+    test_app_scene_on_enter_popup_two,
+    test_app_scene_on_enter_popup_three,
+    test_app_scene_on_enter_popup_four};
 
 /** collection of all scene on event handlers - in the same order as their enum */
 bool (*const test_app_scene_on_event_handlers[])(void*, SceneManagerEvent) = {
     test_app_scene_on_event_main_menu,
     test_app_scene_on_event_popup_one,
-    test_app_scene_on_event_popup_two};
+    test_app_scene_on_event_popup_two,
+    test_app_scene_on_event_popup_three,
+    test_app_scene_on_event_popup_four};
 
 /** collection of all scene on exit handlers - in the same order as their enum */
 void (*const test_app_scene_on_exit_handlers[])(void*) = {
     test_app_scene_on_exit_main_menu,
     test_app_scene_on_exit_popup_one,
-    test_app_scene_on_exit_popup_two};
+    test_app_scene_on_exit_popup_two,
+    test_app_scene_on_exit_popup_three,
+    test_app_scene_on_exit_popup_four};
 
 /** collection of all on_enter, on_event, on_exit handlers */
 const SceneManagerHandlers test_app_scene_event_handlers = {
@@ -288,3 +386,4 @@ int32_t test_app_app(void* p) {
     test_app_free(app);
     return 0;
 }
+
