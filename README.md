@@ -91,7 +91,3 @@ Compile and upload the application to your Flipper Zero device. Navigate through
 
 - The Flipper Zero team for their excellent SDK and documentation.
 - The open-source community for their contributions and support.
-
----
-
-This is a basic overview and setup for your Flipper Zero sample app inspired by https://github.com/klima7. Customize the README file further based on your specific needs and any additional features you may add to your application.
